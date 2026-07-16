@@ -1,0 +1,41 @@
+{
+    "PPP1R15A": {
+        "fullname": "Protein Phosphatase 1 Regulatory Subunit 15A",
+        "protein": "GADD34",
+        "chromosome": "19",
+        "organism": "Homo sapiens",
+        "function": "Regulates cellular stress response"
+    },
+
+    "BRCA1": {
+        "fullname": "Breast Cancer Type 1 Susceptibility Protein",
+        "protein": "BRCA1",
+        "chromosome": "17",
+        "organism": "Homo sapiens",
+        "function": "DNA Repair"
+    },
+
+    "INS": {
+        "fullname": "Insulin",
+        "protein": "Insulin",
+        "chromosome": "11",
+        "organism": "Homo sapiens",
+        "function": "Blood Glucose Regulation"
+    },
+
+    "APP": {
+        "fullname": "Amyloid Beta Precursor Protein",
+        "protein": "APP",
+        "chromosome": "21",
+        "organism": "Homo sapiens",
+        "function": "Neuronal Development"
+    },
+
+    "SNCA": {
+        "fullname": "Alpha Synuclein",
+        "protein": "SNCA",
+        "chromosome": "4",
+        "organism": "Homo sapiens",
+        "function": "Synaptic Function"
+    }
+}

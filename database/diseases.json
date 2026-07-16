@@ -1,0 +1,37 @@
+{
+    "NAFLD": {
+        "type": "Liver Disease",
+        "gene": "PPP1R15A",
+        "organ": "Liver",
+        "description": "Non Alcoholic Fatty Liver Disease"
+    },
+
+    "Breast Cancer": {
+        "type": "Cancer",
+        "gene": "BRCA1",
+        "organ": "Breast",
+        "description": "Breast Cancer"
+    },
+
+    "Diabetes": {
+        "type": "Metabolic Disease",
+        "gene": "INS",
+        "organ": "Pancreas",
+        "description": "Diabetes Mellitus"
+    },
+
+    "Alzheimer": {
+        "type": "Neurological Disease",
+        "gene": "APP",
+        "organ": "Brain",
+        "description": "Alzheimer Disease"
+    },
+
+    "Parkinson": {
+        "type": "Neurological Disease",
+        "gene": "SNCA",
+        "organ": "Brain",
+        "description": "Parkinson Disease"
+    }
+}
+
