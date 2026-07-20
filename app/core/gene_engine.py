@@ -42,3 +42,8 @@ class GeneEngine:
 
             print("Gene Not Found")
 
+    def search_gene(self, gene):
+        if gene in self.gene_database:
+            return self.gene_database[gene]
+        else:
+            return {"error": "Gene not found"}
