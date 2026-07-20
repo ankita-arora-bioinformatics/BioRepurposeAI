@@ -1,4 +1,4 @@
-from pathway_engine import PathwayEngine
+from .pathway_engine import PathwayEngine
 
 class ProteinEngine:
 

@@ -1,4 +1,4 @@
-from protein_engine import ProteinEngine
+from .protein_engine import ProteinEngine
 import json
 from pathlib import Path
 

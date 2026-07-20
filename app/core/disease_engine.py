@@ -1,4 +1,4 @@
-from gene_engine import GeneEngine
+from .gene_engine import GeneEngine
 import json
 from pathlib import Path
 
