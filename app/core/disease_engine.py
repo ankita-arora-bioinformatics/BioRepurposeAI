@@ -55,6 +55,13 @@ class DiseaseEngine:
             print("\nDisease Not Found")
 
 
+    def search_disease(self, disease):
+
+        if disease in self.disease_database:
+            return self.disease_database[disease]
+
+        return {"error": "Disease not found"}
+
     def exit_message(self):
         print("=" * 50)
         print(" Thank you for using BioRepurposeAI")
