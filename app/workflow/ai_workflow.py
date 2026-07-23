@@ -6,6 +6,8 @@ from app.core.pathway_engine import PathwayEngine
 from app.ai.drug_score import DrugScoreEngine
 from app.literature.pubmed_engine import PubMedEngine
 from app.target.target_engine import TargetEngine
+from app.drug_discovery.drug_engine import DrugEngine
+from app.drug_details.drug_details_engine import DrugDetailsEngine
 
 class AIWorkflow:
 
@@ -20,6 +22,8 @@ class AIWorkflow:
         self.score = DrugScoreEngine()
         self.pubmed = PubMedEngine()
         self.target = TargetEngine()
+        self.drug = DrugEngine()
+        self.drug_details = DrugDetailsEngine()
 
     def run_workflow(self, disease_name):
 
@@ -84,10 +88,36 @@ class AIWorkflow:
             print("CHEMBL ID :", target["chembl_id"])
             print("Target Name :", target["target_name"])
 
+        # Drug Discovery
+
+        drugs = self.drug.search_drugs(target["chembl_id"])
+
+        print("\nDrugs Found :", len(drugs))
+
+        if len(drugs) > 0:
+
+            print("\nFirst Drug Information\n")
+
+            first = drugs[0]
+
+            print("Drug :", first.get("molecule_chembl_id", "NA"))
+            print("Action :", first.get("action_type", "NA"))
+
+        # Drug Details
+        if len(drugs) > 0:
+            details = self.drug_details.get_drug_details(drugs[0]["molecule_chembl_id"])
+
+            print("\nDrug Details")
+            print("Drug Name :", details["name"])
+            print("Drug Type :", details["type"])
+            print("Max Phase :", details["max_phase"])
+
         return {
             "Disease": disease_name,
             "Gene": gene,
             "Protein": protein,
-            "CHEMBL_ID": target.get("chembl_id", "NA")
+            "CHEMBL_ID": target.get("chembl_id", "NA"),
+            "Drug_Count": len(drugs),
+            "Drug_Name": details.get("name", "NA")
         }
 
