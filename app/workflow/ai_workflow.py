@@ -8,6 +8,10 @@ from app.literature.pubmed_engine import PubMedEngine
 from app.target.target_engine import TargetEngine
 from app.drug_discovery.drug_engine import DrugEngine
 from app.drug_details.drug_details_engine import DrugDetailsEngine
+from app.clinical_trials.clinical_trials_engine import ClinicalTrialsEngine
+from app.pdb.pdb_engine import PDBEngine
+from app.bindingdb.bindingdb_engine import BindingDBEngine
+from app.docking.docking_engine import DockingEngine
 
 class AIWorkflow:
 
@@ -24,6 +28,10 @@ class AIWorkflow:
         self.target = TargetEngine()
         self.drug = DrugEngine()
         self.drug_details = DrugDetailsEngine()
+        self.clinical = ClinicalTrialsEngine()
+        self.pdb = PDBEngine()
+        self.binding = BindingDBEngine()
+        self.docking = DockingEngine()
 
     def run_workflow(self, disease_name):
 
@@ -112,12 +120,81 @@ class AIWorkflow:
             print("Drug Type :", details["type"])
             print("Max Phase :", details["max_phase"])
 
+        # Clinical Trials
+        if len(drugs) > 0:
+
+            trials = self.clinical.search_trials(details["name"])
+
+            print("\nClinical Trials Found :", len(trials))
+
+            if len(trials) > 0:
+                print("\nFirst Clinical Trial\n")
+
+                trial = trials[0]
+
+                print("NCT ID :", trial["NCTId"][0] if trial["NCTId"] else "NA")
+                print("Title  :", trial["BriefTitle"][0] if trial["BriefTitle"] else "NA")
+                print("Phase  :", trial["Phase"][0] if trial["Phase"] else "NA")
+                print("Status :", trial["OverallStatus"][0] if trial["OverallStatus"] else "NA")
+
+        # PDB Structure
+
+        pdbs = self.pdb.search_pdb(protein)
+
+        print("\nPDB Structures Found :", len(pdbs))
+
+        if len(pdbs) > 0:
+
+            first = pdbs[0]
+
+            print("\nFirst PDB Structure\n")
+            print("PDB ID :", first["identifier"])
+
+        # BindingDB
+
+        if len(drugs) > 0:
+
+            binding = self.binding.search_binding(details["name"])
+
+            print("\nBindingDB Status :", binding["status"])
+            print("Response Size :", binding["response_size"])
+
+        else:
+
+            binding = {
+                "status": "NA",
+                "response_size": 0
+            }
+
+        # Docking
+
+        if len(pdbs) > 0 and len(drugs) > 0:
+
+            docking = self.docking.prepare_docking(
+                first["identifier"],
+                details["name"]
+            )
+
+            print("\nDocking Status :", docking["status"])
+
+        else:
+
+            docking = {
+                "status": "NA"
+            }
+
         return {
             "Disease": disease_name,
             "Gene": gene,
             "Protein": protein,
             "CHEMBL_ID": target.get("chembl_id", "NA"),
             "Drug_Count": len(drugs),
-            "Drug_Name": details.get("name", "NA")
+            "Drug_Name": details.get("name", "NA"),
+            "Clinical_Trials": len(trials) if len(drugs) > 0 else 0,
+            "PDB_Count": len(pdbs),
+            "BindingDB_Status": binding["status"],
+            "BindingDB_Size": binding["response_size"],
+            "Docking": docking["status"]
         }
+
 
