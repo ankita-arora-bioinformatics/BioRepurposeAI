@@ -12,6 +12,7 @@ from app.clinical_trials.clinical_trials_engine import ClinicalTrialsEngine
 from app.pdb.pdb_engine import PDBEngine
 from app.bindingdb.bindingdb_engine import BindingDBEngine
 from app.docking.docking_engine import DockingEngine
+from app.ranking.ranking_engine import RankingEngine
 
 class AIWorkflow:
 
@@ -32,6 +33,7 @@ class AIWorkflow:
         self.pdb = PDBEngine()
         self.binding = BindingDBEngine()
         self.docking = DockingEngine()
+        self.ranking = RankingEngine()
 
     def run_workflow(self, disease_name):
 
@@ -183,6 +185,17 @@ class AIWorkflow:
                 "status": "NA"
             }
 
+        # AI Ranking
+
+        score = self.ranking.calculate_score(
+            len(drugs),
+            len(trials) if len(drugs) > 0 else 0,
+            len(pdbs),
+            binding["status"]
+        )
+
+        print("\nAI Drug Score :", score)
+
         return {
             "Disease": disease_name,
             "Gene": gene,
@@ -194,7 +207,8 @@ class AIWorkflow:
             "PDB_Count": len(pdbs),
             "BindingDB_Status": binding["status"],
             "BindingDB_Size": binding["response_size"],
-            "Docking": docking["status"]
+            "Docking": docking["status"],
+            "AI_Score": score
         }
 
 
