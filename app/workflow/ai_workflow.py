@@ -13,6 +13,7 @@ from app.pdb.pdb_engine import PDBEngine
 from app.bindingdb.bindingdb_engine import BindingDBEngine
 from app.docking.docking_engine import DockingEngine
 from app.ranking.ranking_engine import RankingEngine
+from app.report.report_engine import ReportEngine
 
 class AIWorkflow:
 
@@ -34,6 +35,7 @@ class AIWorkflow:
         self.binding = BindingDBEngine()
         self.docking = DockingEngine()
         self.ranking = RankingEngine()
+        self.report = ReportEngine()
 
     def run_workflow(self, disease_name):
 
@@ -196,7 +198,7 @@ class AIWorkflow:
 
         print("\nAI Drug Score :", score)
 
-        return {
+        result = {
             "Disease": disease_name,
             "Gene": gene,
             "Protein": protein,
@@ -211,4 +213,9 @@ class AIWorkflow:
             "AI_Score": score
         }
 
+        report = self.report.generate_report(result)
+
+        print(report)
+
+        return result
 
