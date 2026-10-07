@@ -14,19 +14,31 @@ class RankingEngine:
         score = 0
 
         # Drug availability
-        score += drug_count * 20
+        # Maximum 20 points
+        if drug_count >= 1:
+            score += min(drug_count * 10, 20)
 
-        # Clinical trials
-        score += clinical_trials * 15
+        # Clinical trial evidence
+        # Maximum 30 points
+        if clinical_trials >= 1:
+            score += min(clinical_trials * 10, 30)
 
-        # Protein structures
-        score += pdb_count * 10
+        # Protein structural evidence
+        # Maximum 20 points
+        if pdb_count >= 1:
+            score += min(pdb_count * 5, 20)
 
-        # BindingDB evidence
-        if binding_status not in ("NA", "Not Found", "NOT_FOUND", None):
-            score += 25
+        # BindingDB experimental evidence
+        # Maximum 30 points
+        if binding_status not in (
+            "NA",
+            "Not Found",
+            "NOT_FOUND",
+            None
+        ):
+            score += 30
 
-        if score > 100:
-            score = 100
+        # Final score cannot exceed 100
+        score = min(score, 100)
 
         return score

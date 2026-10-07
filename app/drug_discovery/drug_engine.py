@@ -16,7 +16,16 @@ class DrugEngine:
             "&limit=20"
         )
 
-        response = requests.get(url, timeout=15)
+        try:
+
+            response = requests.get(url, timeout = 15)
+
+        except requests.RequestException as e:
+
+            print(f"Drug Discovery API Error: {e}")
+
+            return[]
+
 
         if response.status_code != 200:
             return []
