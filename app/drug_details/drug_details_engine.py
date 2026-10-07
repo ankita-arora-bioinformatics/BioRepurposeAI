@@ -22,10 +22,10 @@ class DrugDetailsEngine:
             data = response.json()
 
             return {
-                "name": data.get("pref_name", "NA"),
-                "type": data.get("molecule_type", "NA"),
-                "max_phase": data.get("max_phase", "NA"),
-                "chembl_id": data.get("molecule_chembl_id", "NA")
+                "name": data.get("pref_name") or data.get("molecule_chembl_id") or "NA",
+                "type": data.get("molecule_type") or "NA",
+                "max_phase": data.get("max_phase") if data.get("max_phase") is not None else "NA",
+                "chembl_id": data.get("molecule_chembl_id") or molecule_id
             }
 
         return {

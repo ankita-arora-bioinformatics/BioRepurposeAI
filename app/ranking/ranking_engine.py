@@ -23,7 +23,7 @@ class RankingEngine:
         score += pdb_count * 10
 
         # BindingDB evidence
-        if binding_status != "NA":
+        if binding_status not in ("NA", "Not Found", "NOT_FOUND", None):
             score += 25
 
         if score > 100:

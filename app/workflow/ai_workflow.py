@@ -71,7 +71,7 @@ class AIWorkflow:
         self.protein.analyze_protein(protein)
 
         # Pathway Analysis
-        self.pathway.analyze_pathway(protein)
+        pathway_result = self.pathway.analyze_pathway(protein)
 
         # PubMed Search
         papers = self.pubmed.search_papers(gene)
@@ -124,6 +124,36 @@ class AIWorkflow:
             print("Drug Type :", details["type"])
             print("Max Phase :", details["max_phase"])
 
+        # Scientific Drug Score
+        if len(drugs) > 0:
+
+            first_drug = drugs[0]
+
+            ic50 = first_drug.get("standard_value")
+
+            try:
+                ic50 = float(ic50)
+            except (TypeError, ValueError):
+                ic50 = float("inf")
+
+            pathway_match = False
+            disease_match = False
+            clinical_phase = 0
+
+            pathway_match = pathway_result.get("count", 0) > 0
+            disease_match = True
+            clinical_phase = 0
+
+            scientific_score = self.score.calculate_score(
+                ic50,
+                len(papers),
+                pathway_match,
+                disease_match,
+                clinical_phase
+            )
+
+            print("\nScientific Drug Score :", scientific_score)
+
         # Clinical Trials
         if len(drugs) > 0:
 
@@ -140,6 +170,34 @@ class AIWorkflow:
                 print("Title  :", trial["BriefTitle"][0] if trial["BriefTitle"] else "NA")
                 print("Phase  :", trial["Phase"][0] if trial["Phase"] else "NA")
                 print("Status :", trial["OverallStatus"][0] if trial["OverallStatus"] else "NA")
+
+            clinical_phase = 0
+
+            if len(trials) > 0:
+
+                phases = []
+
+                for trial in trials:
+                    phase_data = trial.get("Phase", ["NA"])
+
+                    if isinstance(phase_data, list):
+                        phase = phase_data[0] if phase_data else "NA"
+                    else:
+                        phase = phase_data
+
+                    phases.append(str(phase).upper())
+
+                if any("PHASE4" in phase for phase in phases):
+                    clinical_phase = 20
+
+                elif any("PHASE3" in phase for phase in phases):
+                    clinical_phase = 15
+
+                elif any("PHASE2" in phase for phase in phases):
+                    clinical_phase = 10
+
+                elif any("PHASE1" in phase for phase in phases):
+                    clinical_phase = 5
 
         # PDB Structure
 

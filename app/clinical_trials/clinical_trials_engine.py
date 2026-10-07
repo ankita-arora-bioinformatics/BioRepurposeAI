@@ -8,25 +8,60 @@ class ClinicalTrialsEngine:
 
     def search_trials(self, drug_name):
 
-        print(f"\nSearching Clinical Trials for {drug_name}...")
+        print(f"\nSearching Clinical Trials for {drug_name} ...")
 
-        url = (
-            "https://clinicaltrials.gov/api/query/study_fields"
-            f"?expr={drug_name}"
-            "&fields=NCTId,BriefTitle,Phase,OverallStatus"
-            "&min_rnk=1"
-            "&max_rnk=5"
-            "&fmt=json"
-        )
+        url = "https://clinicaltrials.gov/api/v2/studies"
 
-        response = requests.get(url)
+        params = {
+            "query.term": drug_name,
+            "pageSize": 5,
+            "format": "json"
+        }
 
-        if response.status_code == 200:
+        try:
+            response = requests.get(url, params=params, timeout=20)
+
+            if response.status_code != 200:
+                print("ClinicalTrials.gov API Error:", response.status_code)
+                return []
 
             data = response.json()
 
-            studies = data["StudyFieldsResponse"]["StudyFields"]
+            studies = []
+
+            for study in data.get("studies", []):
+
+                protocol = study.get("protocolSection", {})
+
+                identification = protocol.get(
+                    "identificationModule", {}
+                )
+
+                status = protocol.get(
+                    "statusModule", {}
+                )
+
+                design = protocol.get(
+                    "designModule", {}
+                )
+
+                studies.append({
+                    "NCTId": identification.get(
+                        "nctId", "NA"
+                    ),
+                    "BriefTitle": identification.get(
+                        "briefTitle", "NA"
+                    ),
+                    "Phase": design.get(
+                        "phases", ["NA"]
+                    ),
+                    "OverallStatus": status.get(
+                        "overallStatus", "NA"
+                    )
+                })
 
             return studies
 
-        return []
+        except Exception as e:
+            print("Clinical Trials Error:", e)
+            return []

@@ -15,7 +15,7 @@ class TargetEngine:
         target_database = {
 
             "GADD34": {
-                "chembl_id": "CHEMBL4523967",
+                "chembl_id": "CHEMBL4630805",
                 "target_name": "Protein Phosphatase 1 Regulatory Subunit 15A"
             },
 

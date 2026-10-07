@@ -5,6 +5,7 @@ from app.core.pathway_engine import PathwayEngine
 
 from app.ai.drug_score import DrugScoreEngine
 from app.reporting.report_generator import ReportGenerator
+from app.workflow.ai_workflow import AIWorkflow
 
 
 def main():
@@ -29,6 +30,9 @@ def main():
     print("\nAll Modules Loaded Successfully!")
 
     print("\nProject Ready!\n")
+
+    workflow = AIWorkflow()
+    workflow.run_workflow(disease)
 
 
 if __name__ == "__main__":
